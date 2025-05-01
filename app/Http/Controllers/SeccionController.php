@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Seccion;
+use App\Models\Alumno;
+use App\Models\Docente;
 use Illuminate\Http\Request;
 
 class SeccionController extends Controller
@@ -12,23 +14,8 @@ class SeccionController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        $secciones = Seccion::all();
+        return view('secciones.index', compact('secciones'));
     }
 
     /**
@@ -36,30 +23,43 @@ class SeccionController extends Controller
      */
     public function show(Seccion $seccion)
     {
-        //
+        $alumnos = Alumno::all();
+        $docentes = Docente::all();
+        $alumnosInscritos = $seccion->alumnos;
+        $docentesAsignados = $seccion->docentes;
+        
+        return view('secciones.show', compact('seccion', 'alumnos', 'docentes', 'alumnosInscritos', 'docentesAsignados'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Asignar alumnos a la sección
      */
-    public function edit(Seccion $seccion)
+    public function asignarAlumnos(Request $request, Seccion $seccion)
     {
-        //
+        $request->validate([
+            'alumnos' => 'required|array',
+            'alumnos.*' => 'exists:alumnos,id',
+        ]);
+
+        $seccion->alumnos()->sync($request->alumnos);
+
+        return redirect()->route('secciones.show', $seccion)
+            ->with('success', 'Alumnos asignados correctamente');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Asignar docentes a la sección
      */
-    public function update(Request $request, Seccion $seccion)
+    public function asignarDocentes(Request $request, Seccion $seccion)
     {
-        //
-    }
+        $request->validate([
+            'docentes' => 'required|array',
+            'docentes.*' => 'exists:docentes,id',
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Seccion $seccion)
-    {
-        //
+        $seccion->docentes()->sync($request->docentes);
+
+        return redirect()->route('secciones.show', $seccion)
+            ->with('success', 'Docentes asignados correctamente');
     }
 }

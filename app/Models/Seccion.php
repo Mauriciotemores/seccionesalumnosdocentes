@@ -9,6 +9,8 @@ class Seccion extends Model
 {
     use HasFactory;
 
+    protected $table = 'secciones';
+
     protected $fillable = ['nombre', 'codigo'];
 
     public function alumnos()

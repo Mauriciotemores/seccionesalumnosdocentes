@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('secciones', function (Blueprint $table) {
+        Schema::create('secciones', function (Blueprint $table) {  
             $table->id();
             $table->string('nombre');
             $table->string('codigo')->unique();
@@ -19,11 +19,5 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('seccions');
-    }
+
 };

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('docente_seccion', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('docente_id')->constrained();
-            $table->foreignId('seccion_id')->constrained();
+            $table->foreignId('docente_id')->constrained('docentes');
+            $table->foreignId('seccion_id')->constrained('secciones');
             $table->timestamps();
         });
     }
@@ -22,8 +22,5 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('docente_seccion');
-    }
+    
 };

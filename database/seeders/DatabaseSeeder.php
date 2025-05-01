@@ -2,22 +2,33 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Alumno;
+use App\Models\Docente;
+use App\Models\Seccion;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        // Crear secciones
+        $secciones = Seccion::factory()->count(5)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Crear alumnos
+        $alumnos = Alumno::factory()->count(20)->create();
+
+        // Crear docentes
+        $docentes = Docente::factory()->count(5)->create();
+
+        // Asignar alumnos y docentes a secciones
+        $secciones->each(function ($seccion) use ($alumnos, $docentes) {
+            $seccion->alumnos()->attach(
+                $alumnos->random(rand(5, 10))->pluck('id')->toArray()
+            );
+            
+            $seccion->docentes()->attach(
+                $docentes->random(rand(1, 2))->pluck('id')->toArray()
+            );
+        });
     }
 }
